@@ -1,0 +1,15 @@
+module sisoshift(
+input clk,
+input rst,
+input din,
+output dout
+    );
+    reg[3:0]shiftreg;
+    always@(posedge clk or posedge rst)begin
+    if(rst)
+    shiftreg<=4'b0000;
+   else
+    shiftreg<={din,shiftreg[3:1]};
+    end
+    assign dout=shiftreg[0]; 
+endmodule
