@@ -1,0 +1,35 @@
+module manual_mode (
+
+input [1:0] sel,
+
+output reg [1:0] speed
+
+);
+
+parameter speed0=2'b00;
+
+parameter speed1=2'b01;
+
+parameter speed2=2'b10;
+
+parameter speed3=2'b11;
+
+always @(*) begin
+
+case (sel)
+
+2'b00: speed<=speed0;
+
+2'b01: speed<=speed1;
+
+2'b10: speed<=speed2;
+
+2'bll:speed<=speed3;
+
+default:speed<=speed0;
+
+endcase
+
+end
+
+endmodule
