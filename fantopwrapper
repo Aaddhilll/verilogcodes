@@ -1,0 +1,53 @@
+module fan_top_wrapper (
+
+input clk_100Mhz,
+
+input rst,
+
+input sel,
+
+input [1:0] manual,
+
+input [3:0] temp,
+
+output [1:0] speed, 
+output reg [6:0] D1_SEG, 
+output reg [3:0] D1_AN
+
+);
+
+wire clk_1Hz;
+
+clk_1hz u1 (
+    .clk_100Mhz(clk_100Mhz),
+    .rst(rst),
+    .clk_1Hz(clk_1Hz)
+);
+
+fan_top u2 (
+    .clk(clk_1Hz),
+    .rst(rst),
+    .sel(sel),
+    .manual(manual),
+    .temp(temp),
+    .speed(speed)
+);
+
+always @(posedge clk_1Hz or posedge rst) begin
+    if (rst)
+        D1_SEG <= 7'b1000000;
+    else
+        case (speed)
+            2'b00: D1_SEG <= 7'b1000000; // 0
+            2'b01: D1_SEG <= 7'b1111001; // 1
+            2'b10: D1_SEG <= 7'b0100100; // 2
+            2'b11: D1_SEG <= 7'b0110000; // 3
+            default: D1_SEG <= 7'b1000000;
+        endcase
+end
+
+always @(*) begin
+    D1_AN = 4'b1110;
+end
+
+endmodule
