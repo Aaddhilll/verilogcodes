@@ -1,0 +1,26 @@
+//top module
+module mod64(
+input clk,rst,
+output [5:0]q
+    );
+mod8 ff0 (.clk(clk),.rst(rst),.q(q));
+mod8 ff1 (.clk(clk),.rst(rst),.q(q));
+mod8 ff2 (.clk(clk),.rst(rst),.q(q));
+endmodule
+
+//
+module modeight(
+input clk,
+input rst,
+output[2:0]q
+    );
+ dfliflop ff0(.clk(clk),.rst(rst),.d(d0),.q(q0));
+ dfliflop ff1(.clk(clk),.rst(rst),.d(d1),.q(q1));
+ dfliflop ff2(.clk(clk),.rst(rst),.d(d2),.q(q2)); 
+ wire d0,d1,d2;
+ wire q0,q1,q2;
+ assign d0=~q0;
+ assign d1=q1^q0;
+ assign d2=q2^(q1&q0);
+ assign q={q2,q1,q0};   
+endmodule
