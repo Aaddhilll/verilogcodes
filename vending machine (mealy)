@@ -1,0 +1,98 @@
+module mealyvending(
+input clk,
+input rst,
+input coin5,
+input coin10,
+output reg open
+    );
+parameter s0=2'b00;
+parameter s5=2'b01;
+parameter s10=2'b10;
+parameter s15=2'b11;
+reg[1:0]current,next;
+always@(*)begin
+case(current)
+s0:begin
+if (coin5)
+next=s5;
+else if (coin10)
+next=s10;
+else next=s0;
+end
+s5:begin
+if (coin5)
+next=s10;
+else if (coin10)
+next=s15;
+else next=s5;
+end
+s10:begin
+if (coin5||coin10)
+next=s15;
+else 
+next=s10;
+end
+s15:
+next=s0;
+default:next=s0;
+endcase
+end
+always @(posedge clk or posedge rst)begin
+if (rst)
+current=s0;
+else
+current<=next;
+end
+always@(*)begin
+case(current)
+s5:open=coin10?1:0;
+s10:open=(coin5||coin10)?1:0;
+s15:open=1;
+default:open=0;
+endcase
+end
+endmodule
+
+
+//testbench
+module meallyvendingtb;
+reg clk, reset;
+reg coin5,coin10;
+wire open;
+meallyvending c0 (
+.clk(clk),
+.rst(rst),
+.coin5(coin5),
+.coin10(coin10), 
+.open(open)
+);
+initial begin
+clk = 0;
+forever #5 clk = ~clk;
+end
+initial begin
+reset = 1;
+coin5 = 0;
+coin10 = 0; 
+#15;
+reset = 0;
+coin5 = 1;
+#10;
+coin5 = 0; 
+
+#10;
+coin10 = 1; 
+#10;
+coin10 = 0; 
+#20;
+coin10 = 1;
+#10;
+coin10 = 0; 
+#10;
+coin5 = 1;
+#10;
+coin5 = 0;
+#20; 
+$finish;
+end
+endmodule
