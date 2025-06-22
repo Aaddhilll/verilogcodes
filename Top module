@@ -1,0 +1,31 @@
+module fan_top (
+
+input sel, clk, rat,
+
+input [1:0] manual,
+
+input [3:0] temp,
+
+output reg [1:0] speed
+
+);
+
+wire [1:0] w1, w2;
+
+manual_mode g1 (.sel(manual), .speed(w1));
+
+auto_mode g2 (.temp(temp), .clk(clk), .rat(rat), .speed(w2));
+
+always @(*) begin
+
+    case (sel)
+
+        1'b0: speed <= w1;
+
+        1'b1: speed <= w2;
+
+    endcase
+
+end
+
+endmodule
